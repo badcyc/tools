@@ -1,28 +1,65 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 26
+    compileSdkVersion 27
     defaultConfig {
         applicationId "com.bingyan.tools"
         minSdkVersion 15
-        targetSdkVersion 26
+        targetSdkVersion 27
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
-    buildTypes {
+    signingConfigs {
+        debug {
+            storeFile file("./debug.keystore")
+        }
         release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            storeFile file("./bingyan.jks")
+            storePassword "87542701"
+            keyAlias "bingyan"
+            keyPassword "87542701"
+        }
+    }
+    buildTypes {
+        debug {
+            applicationIdSuffix ".debug"
+            versionNameSuffix ".debug"
+            debuggable true
+            signingConfig signingConfigs.debug
+            ndk {
+                abiFilters "armeabi", "x86_64"
+            }
+            adbOptions {
+                installOptions "-r"
+            }
+        }
+        release {
+
+            versionNameSuffix ".release"
+            zipAlignEnabled true
+            postprocessing {
+                removeUnusedCode true
+                removeUnusedResources true
+                obfuscate true
+                optimizeCode true
+                proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            }
+            signingConfig signingConfigs.release
+            ndk {
+                abiFilters "armeabi", "armeabi-v7a", "arm64-v8a"
+            }
         }
     }
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'com.android.support:appcompat-v7:26.1.0'
+    //implementation 'com.android.support:appcompat-v7:27.1.1'
+    implementation deps.appcompat_v7
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
-    compile 'com.android.support:design:26.1.0'
+    //implementation 'com.android.support:design:27.1.1'
+    implementation deps.design
 }
