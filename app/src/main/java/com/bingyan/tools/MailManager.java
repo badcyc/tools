@@ -100,7 +100,8 @@ public class MailManager {
             mimeMessage.setRecipients(Message.RecipientType.TO, addresses);
             mimeMessage.setSubject(title);
             MimeBodyPart textPart = new MimeBodyPart();
-            textPart.setContent(content, "text/html");
+            //textPart.setContent(content, "text/html");
+            textPart.setText(content,"UTF-8");       //设置编码方式
             Multipart multipart = new MimeMultipart();
             multipart.addBodyPart(textPart);
             mimeMessage.setContent(multipart);
